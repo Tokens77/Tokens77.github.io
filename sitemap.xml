@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/about/index.html</loc>
+    
+    <lastmod>2021-09-28</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2021/07/27/%E5%AD%A6%E4%B9%A0%E6%97%A5%E8%AE%B0/</loc>
     
     <lastmod>2021-09-22</lastmod>
@@ -67,7 +74,7 @@
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2021-09-22</lastmod>
+    <lastmod>2021-09-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -75,7 +82,7 @@
   
   <url>
     <loc>http://example.com/tags/CTF-notes/</loc>
-    <lastmod>2021-09-22</lastmod>
+    <lastmod>2021-09-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
